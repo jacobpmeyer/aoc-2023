@@ -1,37 +1,37 @@
 def sum_of_part_numbers(schematic):
     nums_to_sum = []
     matrix = schematic.split("\n")[1:-1]
-    row = 0
-    col = 0
-    while row < len(matrix):
-        while col < len(matrix[row]):
-            if str.isdigit(matrix[row][col]):
-                add_to_nums = False
-                s = col - 1 if col - 1 >= 0 else 0
-                i = col
-                while col < len(matrix[row]) and str.isdigit(matrix[row][col]):
-                    col += 1
-                current_num = int(matrix[row][i:col])
-                e = min(col, len(matrix[row]))
 
-                if row > 0:
-                    for char in matrix[row - 1][s:e+1]:
-                        if is_sym(char):
-                            add_to_nums = True
-                if row < len(matrix) - 1:
-                    for char in matrix[row + 1][s:e+1]:
-                        if is_sym(char):
-                            add_to_nums = True
-                for char in matrix[row][s:e+1]:
-                    if is_sym(char):
-                        add_to_nums = True
-                if add_to_nums is True:
-                    nums_to_sum.append(current_num)
-            col += 1
-        row += 1
-        col = 0
+    for i, row in enumerate(matrix):
+        for j, col in enumerate(matrix[row]):
+            if matrix[i][j] == "*":
+                # Look for numbers around
 
     return sum(nums_to_sum)
+
+def find_gears(matrix, row, col):
+    above = max(row - 1, 0)
+    below = min(row + 1, len(matrix) - 1)
+    s = max(col - 1, 0)
+    e = min(col + 1, len(matrix[row]) - 1)
+
+    nums = []
+
+    # Check left
+    if str.isdigit(matrix[row][s]):
+        pos = s
+        while pos >= 0 and str.isdigit(matrix[row][pos]):
+            pos -= 1
+        pos += 1
+        nums.append(int(matrix[row][pos:col]))
+    # Check right
+    if str.isdigit(matrix[row][e]):
+        pos = e
+        while pos >= 0 and str.isdigit(matrix[row][pos]):
+            pos += 1
+        nums.append(int(matrix[row][e:pos]))
+    # Check above
+    # Check below
 
 def is_sym(s):
     return True if str.isascii(s) and not str.isdigit(s) and s != "." else False
