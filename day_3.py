@@ -1,37 +1,37 @@
+from math import prod
+
 def sum_of_part_numbers(schematic):
     nums_to_sum = []
     matrix = schematic.split("\n")[1:-1]
 
     for i, row in enumerate(matrix):
-        for j, col in enumerate(matrix[row]):
+        for j, col in enumerate(matrix[i]):
             if matrix[i][j] == "*":
-                # Look for numbers around
+                nums_to_sum.append(find_gears(matrix, i, j))
 
     return sum(nums_to_sum)
 
-def find_gears(matrix, row, col):
-    above = max(row - 1, 0)
-    below = min(row + 1, len(matrix) - 1)
+def find_gears(matrix, i, col):
     s = max(col - 1, 0)
-    e = min(col + 1, len(matrix[row]) - 1)
+    e = min(col + 1, len(matrix[i]) - 1)
 
-    nums = []
+    nums_to_multiply = []
 
-    # Check left
-    if str.isdigit(matrix[row][s]):
-        pos = s
-        while pos >= 0 and str.isdigit(matrix[row][pos]):
-            pos -= 1
-        pos += 1
-        nums.append(int(matrix[row][pos:col]))
-    # Check right
-    if str.isdigit(matrix[row][e]):
-        pos = e
-        while pos >= 0 and str.isdigit(matrix[row][pos]):
-            pos += 1
-        nums.append(int(matrix[row][e:pos]))
-    # Check above
-    # Check below
+    for row in range(i - 1, i + 2):
+        for pos in range(s, e+1):
+            if row >= 0 and str.isdigit(matrix[row][pos]):
+                left = pos - 1
+                right = pos + 1
+                while left >= 0 and str.isdigit(matrix[row][left]):
+                    left -= 1
+                left += 1
+                while right < len(matrix[row]) and str.isdigit(matrix[row][right]):
+                    right += 1
+                nums_to_multiply.append(int(matrix[row][left:right]))
+                if str.isdigit(matrix[row][col]):
+                    break
+
+    return nums_to_multiply[0] * nums_to_multiply[1] if len(nums_to_multiply) == 2 else 0
 
 def is_sym(s):
     return True if str.isascii(s) and not str.isdigit(s) and s != "." else False
@@ -179,17 +179,4 @@ input1 = """
 .....189.........................791.............236........687.868........................................505..............713......777....
 """
 
-input2 = """
-467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..
-"""
-
-print(sum_of_part_numbers(input2))
+print(sum_of_part_numbers(input1))
