@@ -32,12 +32,11 @@ def seed_to_location(input):
             destination.append([int(m[0]), int(m[0]) + int(m[2]) - 1])
             source.append([int(m[1]), int(m[1]) + int(m[2]) - 1])
         mappings[section] = {
-            "destination": sorted(destination, key = lambda x: x[0]),
-            "source": sorted(source, key = lambda x: x[0]),
+            "destination": destination,
+            "source": source
         }
 
     humidity_locations = []
-    mappings["seeds"] = mappings["seeds"][0].split(" ")
     for t in range(len(mappings["seeds"])):
         mappings["seeds"][t] = int(mappings["seeds"][t])
     for seed_num in mappings["seeds"]:
@@ -47,8 +46,7 @@ def seed_to_location(input):
             destination_list = mappings[step]["destination"]
             for i in range(len(source_list)):
                 if seed >= source_list[i][0] and seed <= source_list[i][1]:
-                    seed += (source_list[i][0] - destination_list[i][0])
-                    print(seed, source_list[i], destination_list[i])
+                    seed = destination_list[i][0] + (seed - source_list[i][0])
                     break
         humidity_locations.append(seed)
 
@@ -269,4 +267,4 @@ humidity-to-location map:
 0 1806134966 198620952
 """
 
-print(seed_to_location(input1))
+print(seed_to_location(input2))
