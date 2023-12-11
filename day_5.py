@@ -39,6 +39,24 @@ def seed_to_location(input):
     humidity_locations = []
     for t in range(len(mappings["seeds"])):
         mappings["seeds"][t] = int(mappings["seeds"][t])
+    seed_range = []
+    i = 0
+    lowest_idx = 0
+    lowest_num = float('inf')
+    while i < len(mappings["seeds"]):
+        seed = mappings["seeds"][i]
+        second_num = seed + mappings["seeds"][i+1]
+        if seed < lowest_num:
+            lowest_num = seed
+            lowest_idx = i
+        elif second_num < lowest_num:
+            lowest_num = second_num
+            lowest_idx = i
+
+        for t in range(seed, seed + mappings["seeds"][i+1] + 1):
+            seed_range.append(t)
+        i += 2
+    mappings["seeds"] = seed_range
     for seed_num in mappings["seeds"]:
         seed = int(seed_num)
         for step in path:
@@ -50,6 +68,7 @@ def seed_to_location(input):
                     break
         humidity_locations.append(seed)
 
+    print(humidity_locations)
     return min(humidity_locations)
 
 input1 = """
@@ -267,4 +286,4 @@ humidity-to-location map:
 0 1806134966 198620952
 """
 
-print(seed_to_location(input2))
+print(seed_to_location(input1))
