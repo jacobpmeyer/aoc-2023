@@ -1,11 +1,12 @@
+from pprint import pprint
+
 # This solution produces a number that is too high.
 def seed_to_location(input):
     sections = input.split("\n")
     mappings = {}
 
-    i = 0
-
     # Map the sections to a Python dictionary
+    i = 0
     while i < len(sections) - 1:
         if sections[i] == "":
             i += 1
@@ -17,10 +18,16 @@ def seed_to_location(input):
             i = j
 
     # Split the seeds string and convert to int
-    mappings["seeds"] = mappings["seeds"][0].split(" ")
-    for t in range(len(mappings["seeds"])):
-        mappings["seeds"][t] = int(mappings["seeds"][t])
 
+    mappings["seeds"] = mappings["seeds"][0].split(" ")
+    new_seeds = []
+    for t in range(0, len(mappings["seeds"]), 2):
+        first_num = int(mappings["seeds"][t])
+        last_num = int(mappings["seeds"][t]) + int(mappings["seeds"][t+1])
+        new_seeds.extend([u for u in range(first_num, last_num)])
+    mappings["seeds"] = new_seeds
+
+    # Add source and destination ranges
     for section, mapping in mappings.items():
         if section == "seeds":
             continue
@@ -35,35 +42,11 @@ def seed_to_location(input):
             "source": source
         }
 
-    # Find lowest group
-    i = 0
-    lowest_idx = 0
-    lowest_num = float('inf')
-    while i < len(mappings["seeds"]):
-        seed = mappings["seeds"][i]
-        second_num = seed + mappings["seeds"][i+1]
-        if seed < lowest_num:
-            lowest_num = seed
-            lowest_idx = i
-        elif second_num < lowest_num:
-            lowest_num = second_num
-            lowest_idx = i
-        i += 2
 
-    # Work on only the lowest posible range
-    left_p = mappings["seeds"][lowest_idx]
-    right_p = mappings["seeds"][lowest_idx] + mappings["seeds"][lowest_idx + 1]
-    while left_p < right_p:
-        left_can = run_seed(left_p, mappings)
-        right_can = run_seed(right_p, mappings)
-        mid_p = left_p + ((right_p - left_p) // 2)
-        if left_can < right_can:
-            right_p = mid_p - 1
-        else:
-            left_p = mid_p + 1
-    return run_seed(min(left_p, right_p), mappings)
+    return min(run_seed(mappings["seeds"], mappings))
 
-def run_seed(seed, mappings):
+
+def run_seed(seeds, mappings):
     path = [
         "seed-to-soil map",
         "soil-to-fertilizer map",
@@ -75,7 +58,18 @@ def run_seed(seed, mappings):
     ]
     humidity_locations = []
 
-    for seed_num in mappings["seeds"]:
+    # lowest_range = []
+    # lowest_idx = None
+    # lowest_humidity = [float('inf'), float('inf')]
+    # for pair in path["humidity-to-location map"]:
+    #     if pair[0] < lowest_humidity[0]:
+    #         lowest_humidity = pair
+
+    # for step in reversed(path):
+    #     if step == "humidity-to-location map":
+    #         continue
+
+    for seed_num in seeds:
         seed = int(seed_num)
         for step in path:
             source_list = mappings[step]["source"]
@@ -86,7 +80,7 @@ def run_seed(seed, mappings):
                     break
         humidity_locations.append(seed)
 
-    return min(humidity_locations)
+    return humidity_locations
 
 input1 = """
 seeds:
@@ -303,4 +297,4 @@ humidity-to-location map:
 0 1806134966 198620952
 """
 
-print(seed_to_location(input2))
+print(seed_to_location(input1))
