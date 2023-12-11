@@ -1,17 +1,11 @@
+# This solution produces a number that is too high.
 def seed_to_location(input):
-    path = [
-        "seed-to-soil map",
-        "soil-to-fertilizer map",
-        "fertilizer-to-water map",
-        "water-to-light map",
-        "light-to-temperature map",
-        "temperature-to-humidity map",
-        "humidity-to-location map"
-    ]
     sections = input.split("\n")
     mappings = {}
 
     i = 0
+
+    # Map the sections to a Python dictionary
     while i < len(sections) - 1:
         if sections[i] == "":
             i += 1
@@ -21,9 +15,14 @@ def seed_to_location(input):
                 j += 1
             mappings[section] = sections[i+1:j]
             i = j
+
+    # Split the seeds string and convert to int
+    mappings["seeds"] = mappings["seeds"][0].split(" ")
+    for t in range(len(mappings["seeds"])):
+        mappings["seeds"][t] = int(mappings["seeds"][t])
+
     for section, mapping in mappings.items():
         if section == "seeds":
-            mappings[section] = mappings[section][0].split(" ")
             continue
         destination = []
         source = []
@@ -35,10 +34,6 @@ def seed_to_location(input):
             "destination": destination,
             "source": source
         }
-
-    humidity_locations = []
-    for t in range(len(mappings["seeds"])):
-        mappings["seeds"][t] = int(mappings["seeds"][t])
 
     # Find lowest group
     i = 0
@@ -58,11 +53,28 @@ def seed_to_location(input):
     # Work on only the lowest posible range
     left_p = mappings["seeds"][lowest_idx]
     right_p = mappings["seeds"][lowest_idx] + mappings["seeds"][lowest_idx + 1]
-    # while left_p <= right_p:
-        # pass
+    while left_p < right_p:
+        left_can = run_seed(left_p, mappings)
+        right_can = run_seed(right_p, mappings)
+        mid_p = left_p + ((right_p - left_p) // 2)
+        if left_can < right_can:
+            right_p = mid_p - 1
+        else:
+            left_p = mid_p + 1
+    return run_seed(min(left_p, right_p), mappings)
 
+def run_seed(seed, mappings):
+    path = [
+        "seed-to-soil map",
+        "soil-to-fertilizer map",
+        "fertilizer-to-water map",
+        "water-to-light map",
+        "light-to-temperature map",
+        "temperature-to-humidity map",
+        "humidity-to-location map"
+    ]
+    humidity_locations = []
 
-    # Add seeds that are in
     for seed_num in mappings["seeds"]:
         seed = int(seed_num)
         for step in path:
@@ -74,11 +86,7 @@ def seed_to_location(input):
                     break
         humidity_locations.append(seed)
 
-    print(humidity_locations)
     return min(humidity_locations)
-
-def run_seed(seed):
-    pass
 
 input1 = """
 seeds:
@@ -295,4 +303,4 @@ humidity-to-location map:
 0 1806134966 198620952
 """
 
-print(seed_to_location(input1))
+print(seed_to_location(input2))
