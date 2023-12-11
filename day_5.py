@@ -39,7 +39,8 @@ def seed_to_location(input):
     humidity_locations = []
     for t in range(len(mappings["seeds"])):
         mappings["seeds"][t] = int(mappings["seeds"][t])
-    seed_range = []
+
+    # Find lowest group
     i = 0
     lowest_idx = 0
     lowest_num = float('inf')
@@ -52,11 +53,16 @@ def seed_to_location(input):
         elif second_num < lowest_num:
             lowest_num = second_num
             lowest_idx = i
-
-        for t in range(seed, seed + mappings["seeds"][i+1] + 1):
-            seed_range.append(t)
         i += 2
-    mappings["seeds"] = seed_range
+
+    # Work on only the lowest posible range
+    left_p = mappings["seeds"][lowest_idx]
+    right_p = mappings["seeds"][lowest_idx] + mappings["seeds"][lowest_idx + 1]
+    # while left_p <= right_p:
+        # pass
+
+
+    # Add seeds that are in
     for seed_num in mappings["seeds"]:
         seed = int(seed_num)
         for step in path:
@@ -70,6 +76,9 @@ def seed_to_location(input):
 
     print(humidity_locations)
     return min(humidity_locations)
+
+def run_seed(seed):
+    pass
 
 input1 = """
 seeds:
