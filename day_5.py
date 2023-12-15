@@ -18,7 +18,6 @@ def seed_to_location(input):
             i = j
 
     # Split the seeds string and convert to int
-
     mappings["seeds"] = mappings["seeds"][0].split(" ")
     new_seeds = []
     for t in range(0, len(mappings["seeds"]), 2):
@@ -42,7 +41,6 @@ def seed_to_location(input):
             "source": source
         }
 
-
     return min(run_seed(mappings["seeds"], mappings))
 
 
@@ -58,17 +56,6 @@ def run_seed(seeds, mappings):
     ]
     humidity_locations = []
 
-    # lowest_range = []
-    # lowest_idx = None
-    # lowest_humidity = [float('inf'), float('inf')]
-    # for pair in path["humidity-to-location map"]:
-    #     if pair[0] < lowest_humidity[0]:
-    #         lowest_humidity = pair
-
-    # for step in reversed(path):
-    #     if step == "humidity-to-location map":
-    #         continue
-
     for seed_num in seeds:
         seed = int(seed_num)
         for step in path:
@@ -81,6 +68,34 @@ def run_seed(seeds, mappings):
         humidity_locations.append(seed)
 
     return humidity_locations
+
+"""
+humidity-to-location
+[0, 198620951]
+[1806134966, 2004755917]
+
+temperature-to-humidity
+[1797084784, 1916190298]
+[3346946555, 3466052069]
+
+light-to-temperature
+[3036948483, 3431278061]
+[3775809079, 4170138657]
+
+water-to-light
+[3750718952, 3823753471]
+
+fertilizer-to-water
+[3750718952, 3823753471]
+[3202695488, 3275730007]
+
+soil-to-fertilizer
+[3153686220, 3226739509]
+[1674911868, 1747965157]
+
+seed-to-soil
+
+"""
 
 input1 = """
 seeds:
