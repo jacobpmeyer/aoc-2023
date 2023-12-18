@@ -54,8 +54,23 @@ def run_seed(seeds, mappings):
         "temperature-to-humidity map",
         "humidity-to-location map"
     ]
-    humidity_locations = []
+    path = list(reversed(path))
 
+    # Find minimum location destination pair
+    # Match to source pair of same idx
+    # Go to next mapping and find nearest destination pair, where range end is > than stored pair's beginning.
+    # When finished with maps, find the lowest seed within the range provided.
+    min_pair = [float('inf'), float('inf')]
+    h_source_list = mappings["humidity-to-location map"]["source"]
+    h_destination_list = mappings["humidity-to-location map"]["destination"]
+    for step in path:
+        source_list = mappings[step]["source"]
+        destination_list = mappings[step]["destination"]
+        local_lowest =
+        for source in source_list:
+
+
+    humidity_locations = []
     for seed_num in seeds:
         seed = int(seed_num)
         for step in path:
@@ -312,4 +327,4 @@ humidity-to-location map:
 0 1806134966 198620952
 """
 
-print(seed_to_location(input1))
+print(seed_to_location(input2))
